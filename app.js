@@ -13,7 +13,14 @@ function renderNewPostForm(request, response) {
 };
 
 function addNewPost (request, response) {
-	console.log('Received a new post');
+	parseBody(request, function(body){
+    var post = {
+    	title: body.title,
+    	content: body.content
+    }
+    console.log('Title: ' + post.title);
+    console.log('Content :' + post.content);
+	});
 	response.end();
 };
 
@@ -24,13 +31,13 @@ function render404(request, response) {
   response.end('404 File Not Found');
 };
 
-function parseBody(request, response) {
+function parseBody(request, callback) {
   var body = '';
-  request.on('data', function(chunk){
+  request.on('data', function(chunk) {
   	body += chunk;
   });
-  request.on('end', function(){
-  	callback(body)
+  request.on('end', function() {
+  	callback(qs.parse(body));
   });
 };
 
